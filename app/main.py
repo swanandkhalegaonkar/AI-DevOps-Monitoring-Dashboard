@@ -13,7 +13,7 @@ app = FastAPI(
 @app.get("/")
 def root():
     return {
-        "message": "THIS IS MY NEW VERSION 🚀"
+        "message": "THIS IS MY NEW VERSION with GRATE VIEW🚀"
     }
 
 
