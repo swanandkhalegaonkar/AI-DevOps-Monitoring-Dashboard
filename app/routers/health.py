@@ -3,8 +3,7 @@ from fastapi import APIRouter
 router = APIRouter()
 
 @router.get("/health")
-def health_check():
-    return
-    {
+def health():
+    return {
         "status": "healthy"
     }

@@ -1,37 +1,44 @@
 from fastapi import FastAPI
-import platform
-import socket
-import psutil
+
+
+from app.routers.health import router as health_router
+from app.routers.system import router as system_router
+from time import time
+from app.logger import logger
+
+from app.config import APP_NAME, APP_VERSION
 
 app = FastAPI(
-    title="AI DevOps Monitoring Dashboard",
-    version="1.0.0",
+    title=APP_NAME,
+    version=APP_VERSION,
     description="Monitor system metrics and analyze them using AI."
 )
+
+app.include_router(health_router)
+app.include_router(system_router)
 
 
 @app.get("/")
 def root():
     return {
-        "message": "THIS IS MY NEW VERSION with GRATE VIEW🚀"
+        "message": "Welcome to AI DevOps Monitoring Dashboard 🚀"
     }
 
+@app.middleware("http")
+async def log_requests(request, call_next):
 
-@app.get("/health")
-def health():
-    return {
-        "status": "healthy"
-    }
+    start = time()
 
+    response = await call_next(request)
 
-@app.get("/system")
-def system_info():
-    return {
-        "hostname": socket.gethostname(),
-        "operating_system": platform.system(),
-        "os_version": platform.release(),
-        "processor": platform.processor(),
-        "cpu_percent": psutil.cpu_percent(interval=1),
-        "memory_percent": psutil.virtual_memory().percent,
-        "disk_percent": psutil.disk_usage('/').percent,
-    }
+    duration = round(time() - start, 3)
+
+    logger.info(
+        "%s %s | Status=%s | Duration=%ss",
+        request.method,
+        request.url.path,
+        response.status_code,
+        duration,
+    )
+
+    return response   
