@@ -23,3 +23,6 @@ htmlcov/
 # OS
 .DS_Store
 Thumbs.db
+# Ignore local tools and binaries
+tools/
+*.tar.gz

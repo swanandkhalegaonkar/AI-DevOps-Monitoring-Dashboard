@@ -3,9 +3,9 @@ from fastapi import FastAPI
 
 from app.routers.health import router as health_router
 from app.routers.system import router as system_router
+from app.routers.metrics import router as metrics_router
 from time import time
 from app.logger import logger
-from app.routers.metrics import router as metrics_router
 from app.config import APP_NAME, APP_VERSION
 
 app = FastAPI(
